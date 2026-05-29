@@ -1,0 +1,13 @@
+{
+  "name": "flash-record",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm --prefix mobile install",
+    "start": "npm --prefix mobile start",
+    "android": "npm --prefix mobile run android",
+    "ios": "npm --prefix mobile run ios",
+    "web": "npm --prefix mobile run web",
+    "lint": "npm --prefix mobile run lint",
+    "typecheck": "npm --prefix mobile run typecheck"
+  }
+}
