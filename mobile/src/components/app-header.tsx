@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { Settings } from 'lucide-react-native';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -25,6 +26,7 @@ export function AppHeader() {
         accessibilityLabel="Open settings"
         accessibilityRole="button"
         hitSlop={8}
+        onPress={() => router.push('/settings')}
         style={({ pressed }) => [
           styles.settingsButton,
           {
