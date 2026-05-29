@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Switch, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Switch, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
@@ -104,6 +105,80 @@ export function SettingsSelectRow<T extends string | number>({
           );
         })}
       </View>
+    </View>
+  );
+}
+
+export function SettingsTextRow({
+  label,
+  description,
+  value,
+  placeholder,
+  helperText,
+  onCommit,
+  onFocus,
+  maxLength = 30,
+}: BaseRowProps & {
+  value: string;
+  placeholder?: string;
+  helperText?: string;
+  /** Called when the typed value is valid; receives the new value. */
+  onCommit: (next: string) => void;
+  onFocus?: () => void;
+  maxLength?: number;
+}) {
+  const theme = useTheme();
+  const card = useCardStyle();
+
+  // Local draft so the field can be transiently empty during editing.
+  // On blur, an empty draft reverts to the last committed value.
+  const [draft, setDraft] = useState(value);
+  const [lastValue, setLastValue] = useState(value);
+  if (value !== lastValue) {
+    setLastValue(value);
+    setDraft(value);
+  }
+
+  return (
+    <View style={[styles.card, styles.rowStacked, card]}>
+      <View style={styles.textBlock}>
+        <ThemedText type="default">{label}</ThemedText>
+        {description ? (
+          <ThemedText type="small" themeColor="textSecondary">
+            {description}
+          </ThemedText>
+        ) : null}
+      </View>
+      <TextInput
+        value={draft}
+        onChangeText={(next) => {
+          setDraft(next);
+          const trimmed = next.trim();
+          if (trimmed.length > 0) onCommit(trimmed);
+        }}
+        onFocus={onFocus}
+        onBlur={() => {
+          if (draft.trim().length === 0) setDraft(value);
+        }}
+        maxLength={maxLength}
+        autoCapitalize="words"
+        autoCorrect={false}
+        placeholder={placeholder}
+        placeholderTextColor={theme.textSecondary}
+        style={[
+          styles.textInput,
+          {
+            color: theme.text,
+            backgroundColor: theme.backgroundElement,
+            borderColor: theme.backgroundSelected,
+          },
+        ]}
+      />
+      {helperText ? (
+        <ThemedText type="small" themeColor="textSecondary">
+          {helperText}
+        </ThemedText>
+      ) : null}
     </View>
   );
 }
@@ -217,6 +292,13 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     flex: 1,
+  },
+  textInput: {
+    borderRadius: 10,
+    borderWidth: StyleSheet.hairlineWidth,
+    fontSize: 16,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
   },
   actionDescription: {
     marginTop: Spacing.half,

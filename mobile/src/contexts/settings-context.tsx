@@ -38,6 +38,8 @@ export type Settings = {
   bubbleStyle: BubbleStyle;
   bubbleEmoji: string;
   showTouches: boolean;
+  /** Folder / album in the device gallery for screenshots and recordings. */
+  albumName: string;
 };
 
 export const defaultSettings: Settings = {
@@ -49,7 +51,20 @@ export const defaultSettings: Settings = {
   bubbleStyle: 'dot',
   bubbleEmoji: '🎬',
   showTouches: false,
+  albumName: 'FlashRecord',
 };
+
+// Allow letters, digits, spaces, dashes, and underscores (filename-safe across
+// Android MediaStore and iOS Photos album names).
+const ALBUM_NAME_RE = /^[A-Za-z0-9 _-]+$/;
+const ALBUM_NAME_MAX = 30;
+
+export function sanitizeAlbumName(input: string): string | null {
+  const trimmed = input.trim();
+  if (trimmed.length === 0 || trimmed.length > ALBUM_NAME_MAX) return null;
+  if (!ALBUM_NAME_RE.test(trimmed)) return null;
+  return trimmed;
+}
 
 type SettingsContextValue = {
   settings: Settings;
@@ -104,6 +119,10 @@ function sanitize(raw: unknown): Settings {
         : defaultSettings.bubbleEmoji,
     showTouches:
       typeof stored.showTouches === 'boolean' ? stored.showTouches : defaultSettings.showTouches,
+    albumName:
+      typeof stored.albumName === 'string'
+        ? sanitizeAlbumName(stored.albumName) ?? defaultSettings.albumName
+        : defaultSettings.albumName,
   };
 }
 

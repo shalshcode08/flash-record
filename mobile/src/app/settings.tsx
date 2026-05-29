@@ -19,6 +19,7 @@ import {
   SettingsInfoRow,
   SettingsSection,
   SettingsSelectRow,
+  SettingsTextRow,
   SettingsToggleRow,
 } from '@/components/settings/settings-row';
 import { ThemedText } from '@/components/themed-text';
@@ -28,6 +29,7 @@ import {
   type AudioSource,
   type CountdownSeconds,
   type FrameRate,
+  sanitizeAlbumName,
   useSettings,
   type VideoQuality,
 } from '@/contexts/settings-context';
@@ -200,6 +202,22 @@ export default function SettingsScreen() {
                 onChangeStyle={(next) => update('bubbleStyle', next)}
                 onChangeEmoji={(next) => update('bubbleEmoji', next)}
                 onEmojiFocus={scrollToBottomSoon}
+              />
+            </SettingsSection>
+
+            <SettingsSection title="Storage">
+              <SettingsTextRow
+                label="Save folder"
+                description="Screenshots and recordings save to this album in your gallery."
+                value={settings.albumName}
+                placeholder="FlashRecord"
+                helperText="Letters, numbers, spaces, - and _ only. Max 30 characters."
+                maxLength={30}
+                onFocus={scrollToBottomSoon}
+                onCommit={(next) => {
+                  const cleaned = sanitizeAlbumName(next);
+                  if (cleaned) update('albumName', cleaned);
+                }}
               />
             </SettingsSection>
 

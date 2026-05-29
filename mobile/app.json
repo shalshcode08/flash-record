@@ -1,13 +1,14 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "FlashRecord",
+    "slug": "flash-record",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobile",
+    "scheme": "flashrecord",
     "userInterfaceStyle": "automatic",
     "android": {
+      "package": "com.shalshcode.flashrecord",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -22,6 +23,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-dev-client",
       [
         "expo-splash-screen",
         {
@@ -30,6 +32,14 @@
             "image": "./assets/images/splash-icon.png",
             "imageWidth": 76
           }
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow FlashRecord to save screenshots and recordings to your Photos.",
+          "savePhotosPermission": "Allow FlashRecord to save screenshots and recordings to your Photos.",
+          "isAccessMediaLocationEnabled": false
         }
       ]
     ],
